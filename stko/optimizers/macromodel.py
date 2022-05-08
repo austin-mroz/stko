@@ -5,7 +5,7 @@ MacroModel Optimizers
 Performs optimizations using MacroModel
 
 """
-
+import glob
 import os
 import subprocess as sp
 import time
@@ -1328,11 +1328,14 @@ class MacroModelMD(MacroModel):
         # Run the optimization.
         self._run_bmin(mol, run_name)
         # Extract the lowest energy conformer into its own .mae file.
-        conformer_mae = MAEExtractor(run_name).path
-        rdkit_opt_mol = mol_from_mae_file(conformer_mae)
+        conformer_mae_extractor = MAEExtractor(run_name)
+        conformer_mae_extractor.extract_conformers(self._conformers)
+         
+        rdkit_opt_mol = mol_from_mae_file(conformer_mae_extractor.path)
         mol = mol.with_position_matrix(
             rdkit_opt_mol.GetConformer().GetPositions()
         )
+
         move_generated_macromodel_files(run_name, output_dir)
         return mol
 

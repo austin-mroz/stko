@@ -107,10 +107,10 @@ class MAEExtractor:
 
     """
 
-    def __init__(self, run_name, n=1):
+    def __init__(self, run_name):
         self.maegz_path = f'{run_name}-out.maegz'
         self.maegz_to_mae()
-        self.extract_conformers(n)
+        # self.extract_conformers(n)
 
     def extract_conformers(self, n):
         """
@@ -126,10 +126,11 @@ class MAEExtractor:
         None : :class:`NoneType`
 
         """
-
+        num_low_en_conf = sorted(self.lowest_energy_conformers(n),key=lambda x:x[1])
+        
         for i in range(n):
             # Get the id of the lowest energy conformer.
-            num = self.lowest_energy_conformers(n)[i][1]
+            num = num_low_en_conf[i][1] # self.lowest_energy_conformers(n)[i][1]
             # Get the structure block corresponding to the lowest
             # energy conformer.
             content = self.content.split("f_m_ct")
